@@ -2,9 +2,16 @@ import React, {useState, useEffect} from 'react'
 import { commerce } from './lib/commerce';
 import {
     Products,
-    NavBar
+    NavBar,
+    Cart
 } from "./components";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 //1:01:25
+//https://dashboard.chec.io/products/
+//https://www.youtube.com/watch?v=377AQ0y6LPA&ab_channel=JavaScriptMastery
+//https://github.com/adrianhajdin/project_e_commerce/blob/main/src/components/Navbar/Navbar.jsx
+//https://gist.github.com/adrianhajdin/9867aefce5318f27c95990553f428c6e
 const App = () => {
     const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
@@ -29,13 +36,24 @@ const App = () => {
         fetchCart();
     }, []);
 
-    console.log(products);
-
+    console.log("produtos", products);
+    console.log("carrinho", cart)
     return (
-        <div>
-            <NavBar totalItems={cart.total_items} />
-            <Products products={products} onAddToCart={handleAddToCart} />
-        </div>
+        <Router>
+            <div>
+                <NavBar totalItems={cart.total_items} />
+                <Routes>
+                    <Route exact path="/"element={
+                        <Products products={products} onAddToCart={handleAddToCart} />                    
+                    }/>
+                    <Route exact path="/carrinho" element={
+                        <Cart cart={cart} />
+                    }/>
+                    
+                </Routes>
+            </div>
+        </Router>
+
     )
 }
 
