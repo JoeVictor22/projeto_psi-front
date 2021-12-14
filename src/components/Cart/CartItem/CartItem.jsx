@@ -1,16 +1,17 @@
 import React from 'react'
 import { Typography, Button, Card, CardActions, CardContent, CardMedia } from '@material-ui/core'
 import useStyles from "./styles";
+import defaultImage from "../../../assets/default_image.png"
 
 const CartItem = ({item, handleUpdateCartQtd, handleRemoveFromCart}) => {
     const classes = useStyles();
 
     return (
         <Card>
-            <CardMedia className={classes.media}image={item.image.url} alt={item.name} />
+            <CardMedia className={classes.media}image={item.imagem || defaultImage} alt={item.nome} />
             <CardContent className={classes.cardContent}>
-                <Typography variant="h4">{item.name}</Typography>
-                <Typography variant="h5">{item.line_total.formatted_with_symbol}</Typography>
+                <Typography variant="h4">{item.nome}</Typography>
+                <Typography variant="h5">{item.preco}</Typography>
             </CardContent>
             <CardActions className={classes.cardActions}>
                 <div className={classes.buttons}>

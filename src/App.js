@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useReducer} from 'react'
 import { commerce } from './lib/commerce';
 import {
     Products,
@@ -8,6 +8,11 @@ import {
 } from "./components";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import AxiosUnsecureService from './services/AxiosUnsecureService';
+import Cookies from 'js-cookie';
+
+const rest = new AxiosUnsecureService();
+
 //1:01:25
 //https://dashboard.chec.io/products/
 //https://www.youtube.com/watch?v=377AQ0y6LPA&ab_channel=JavaScriptMastery
@@ -15,21 +20,46 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 //https://gist.github.com/adrianhajdin/9867aefce5318f27c95990553f428c6e
 const App = () => {
     const [products, setProducts] = useState([]);
-    const [cart, setCart] = useState([]);
+    const [cart, setCart] = useState({});
 
     const fetchProducts = async () => {
-        const { data } = await commerce.products.list();
-        setProducts(data);
+        const {data} = await rest.get("produto/list");
+        console.log("produtos", data.items)
+        setProducts(data.items);
     }
 
     const fetchCart = async () => {
-        setCart(await commerce.cart.retrieve());
+        let carrinho = Cookies.get("carrinho");
+
+        if (carrinho === undefined){
+            carrinho = {}
+        }
+        setCart(carrinho);
     }
 
 
-    const handleAddToCart = async (productId, quantity) => {
-        const {cart} = await commerce.cart.add(productId,quantity);
-        setCart(cart);
+    const handleAddToCart = async (produto, quantity) => {
+        let carrinho = {
+            ...cart
+        };
+        
+        if (carrinho[produto.id]){
+            carrinho[produto.id].quantity += quantity;
+        }else{
+            let novoProduto = {
+                ...produto,
+                quantity: quantity
+            }
+    
+            carrinho = {
+                [produto.id]: novoProduto,
+                ...cart
+            }
+
+        }
+        setCart(carrinho);
+        console.log("carrinho", cart);
+
     }
 
     useEffect(() => {
@@ -38,32 +68,52 @@ const App = () => {
     }, []);
 
     const handleUpdateCartQtd = async(productId, quantity) => {
-        const {cart} = await commerce.cart.update(productId, quantity);
-        setCart(cart);
+        
+        let carrinho = {
+            ...cart
+        };
+
+        if (carrinho[productId]){
+            if (quantity <= 0){
+                delete carrinho[productId];
+            }else{
+                carrinho[productId].quantity = quantity;            
+            }
+            setCart(carrinho);
+        }
+        console.log(carrinho);
+
     }
 
     const handleRemoveFromCart = async(productId) => {
-        const {cart} = await commerce.cart.remove(productId);
-        setCart(cart);
+        let carrinho = {
+            ...cart
+        };
+        delete carrinho[productId];
+        setCart(carrinho);
+        console.log(cart);
+
     }
 
     const handleEmptyCart = async() => {
-        const {cart} = await commerce.cart.empty();
-        setCart(cart);
+        let carrinho = {};
+        setCart(carrinho);
+        console.log(cart);
+
     }
 
   
     return (
         <Router>
             <div>
-                <NavBar totalItems={cart.total_items} />
+                <NavBar totalItems={cart.length || 0} />
                 <Routes>
                     <Route exact path="/"element={
                         <Products products={products} onAddToCart={handleAddToCart} />                    
                     }/>
                     <Route exact path="/carrinho" element={
                         <Cart 
-                            cart={cart} 
+                            carrinho={cart} 
                             handleUpdateCartQtd={handleUpdateCartQtd} 
                             handleRemoveFromCart={handleRemoveFromCart}
                             handleEmptyCart={handleEmptyCart}

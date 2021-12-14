@@ -6,23 +6,30 @@ import {Link} from "react-router-dom";
 import useStyles from "./styles";
 
 
-const Cart = ({cart, handleUpdateCartQtd, handleRemoveFromCart, handleEmptyCart}) => {
+const Cart = ({carrinho, handleUpdateCartQtd, handleRemoveFromCart, handleEmptyCart}) => {
     const classes = useStyles();
 
     const EmptyCart = () => {
         return (
             <Typography variant="subtitle1">
                 Você não possui itens no carrinho, 
-                <Link className={classes.link}>adicione algo!</Link>    
+                <p className={classes.link}>adicione algo!</p>    
             </Typography>
             )
         }
     const FilledCart = () => {
-        const total = cart.subtotal.formatted_with_symbol;
+        const total = "muito dinheiro";
+        let items = []
+        for (var key in carrinho){
+            items.push(carrinho[key])
+        }
+        
         return (
             <>
             <Grid container spacing={3}>
-                {cart.line_items.map((item) => (
+                
+                {items.map((item) => (
+                    
                     <Grid item xs={12} sm={4} key={item.id}>
                         <CartItem item={item} handleUpdateCartQtd={handleUpdateCartQtd} handleRemoveFromCart={handleRemoveFromCart}/>
                     </Grid>
@@ -32,7 +39,7 @@ const Cart = ({cart, handleUpdateCartQtd, handleRemoveFromCart, handleEmptyCart}
                 <Typography variant="h6">Total: {total}</Typography>
                 <div>
                
-                    <Button className={classes.EmptyCart} size="large" type="button" variant="contained" color="secondary">
+                    <Button onClick={() => {handleEmptyCart()}}className={classes.EmptyCart} size="large" type="button" variant="contained" color="secondary">
                         Limpar carrinho
                     </Button>                    
                     <Button component={Link} to="/checkout" className={classes.checkout} size="large" type="button" variant="contained" color="primary">
@@ -44,8 +51,9 @@ const Cart = ({cart, handleUpdateCartQtd, handleRemoveFromCart, handleEmptyCart}
         )
     }
 
-    if( !cart.line_items) return "Carregando...";
-    const isEmpty = !cart.line_items.length;
+    // // if( !cart.line_items) return "Carregando...";
+    const isEmpty = !Object.keys(carrinho).length;
+    console.log("error", carrinho)
 
     return (
         <Container>
