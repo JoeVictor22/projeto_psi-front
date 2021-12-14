@@ -8,7 +8,7 @@ import PaymentForm from './PaymentForm';
 
 const steps = ["Endereço", "Detalhes do Pagamento"]
 
-const Checkout = ({ cart }) => {
+const Checkout = ({ carrinho }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [endereco, setEndereco] = useState({});
 
@@ -32,14 +32,18 @@ const Checkout = ({ cart }) => {
           <CircularProgress />
         </div>
       ));
-    const salvarInformacoes = (data) => {
+      const salvarEndereco = (data) => {
+        setEndereco(data);
+        nextStep();
+      };
+      const salvarPagamento = (data) => {
         setEndereco(data);
         nextStep();
       };
 
       const Form = () => (activeStep === 0
-        ? <AddressForm nextStep={nextStep} salvarInformacoes={salvarInformacoes} />
-        : <PaymentForm nextStep={nextStep} backStep={backStep} />);
+        ? <AddressForm nextStep={nextStep} salvarInformacoes={salvarEndereco} />
+        : <PaymentForm nextStep={nextStep} backStep={backStep} salvarInformacoes={salvarPagamento} />);
     
         return (
             <>

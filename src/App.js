@@ -106,7 +106,7 @@ const App = () => {
     return (
         <Router>
             <div>
-                <NavBar totalItems={cart.length || 0} />
+                <NavBar totalItems={Object.keys(cart).length || 0} />
                 <Routes>
                     <Route exact path="/"element={
                         <Products products={products} onAddToCart={handleAddToCart} />                    
@@ -121,7 +121,7 @@ const App = () => {
                     }/>
                     <Route exact path="/checkout" element={
                         <Checkout 
-                            cart={cart} 
+                            carrinho={cart} 
                         />
                     }/>
                 </Routes>
