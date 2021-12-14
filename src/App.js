@@ -3,7 +3,8 @@ import { commerce } from './lib/commerce';
 import {
     Products,
     NavBar,
-    Cart
+    Cart,
+    Checkout
 } from "./components";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -27,8 +28,8 @@ const App = () => {
 
 
     const handleAddToCart = async (productId, quantity) => {
-        const response = await commerce.cart.add(productId,quantity);
-        setCart(response.cart)
+        const {cart} = await commerce.cart.add(productId,quantity);
+        setCart(cart);
     }
 
     useEffect(() => {
@@ -36,8 +37,22 @@ const App = () => {
         fetchCart();
     }, []);
 
-    console.log("produtos", products);
-    console.log("carrinho", cart)
+    const handleUpdateCartQtd = async(productId, quantity) => {
+        const {cart} = await commerce.cart.update(productId, quantity);
+        setCart(cart);
+    }
+
+    const handleRemoveFromCart = async(productId) => {
+        const {cart} = await commerce.cart.remove(productId);
+        setCart(cart);
+    }
+
+    const handleEmptyCart = async() => {
+        const {cart} = await commerce.cart.empty();
+        setCart(cart);
+    }
+
+  
     return (
         <Router>
             <div>
@@ -47,9 +62,18 @@ const App = () => {
                         <Products products={products} onAddToCart={handleAddToCart} />                    
                     }/>
                     <Route exact path="/carrinho" element={
-                        <Cart cart={cart} />
+                        <Cart 
+                            cart={cart} 
+                            handleUpdateCartQtd={handleUpdateCartQtd} 
+                            handleRemoveFromCart={handleRemoveFromCart}
+                            handleEmptyCart={handleEmptyCart}
+                        />
                     }/>
-                    
+                    <Route exact path="/checkout" element={
+                        <Checkout 
+                            cart={cart} 
+                        />
+                    }/>
                 </Routes>
             </div>
         </Router>
