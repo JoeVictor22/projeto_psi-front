@@ -19,36 +19,36 @@ const Checkout = ({ carrinho }) => {
     const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
     
   	const goToWhatsapp = () => {
-      console.log("aaa", endereco, carrinho, Object.keys(carrinho))
+      console.log("aaa", endereco, pagamento)
 
-      let nome = "joao" || endereco.nome
-      let enderecoo = "rua dali de casa" || endereco.endereco
+      let nome = "João" || endereco.nome
+      let enderecoo = "Rua sem saída, 15" || endereco.endereco
       let total = 0
       let produtos = ""
       let telefone = "5585986826485"
-      if (carrinho){
+      let infoPagamento = "Pagamento em cartão"
+ 
         for (var key in carrinho){
           let subtotal =  carrinho[key].preco * carrinho[key].quantity
           total += subtotal
-          produtos += carrinho[key].quantity + "x" + carrinho[key].nome +
-          "Valor unitário (R$ " + carrinho[key].preco +")"+ 
-          "Subtotal do item: R$ " +subtotal 
+          produtos += carrinho[key].quantity + " x " + carrinho[key].nome +
+          "\n\ Valor unitário (R$ " + carrinho[key].preco +")"+ 
+          "\n\ Subtotal do item: R$ " +subtotal 
         }
 
-      }
-  
-      let mensagem = "✅ NOVO PEDIDO "+
-      "▶ RESUMO DO PEDIDO" + 
-      produtos +
-      " -  -  -  -  -  -  -  -  -  -  - " +
-      "▶ Dados para entrega " +
+      
+      let mensagem = "✅ NOVO PEDIDO \n\ "+
+      "▶ RESUMO DO PEDIDO\n\ " + 
+      produtos +"\n\ " +
+      "▶ Dados para entrega\n\  " +
   
       "Nome: "+ nome +
-      "Endereço: " +enderecoo +
+      "\n\ Endereço: " +enderecoo +
   
-      "▶ TOTAL = R$ " + total + 
-      "▶ PAGAMENTO " +
-      "Pagamento em Dinheiro"
+      "\n\ ▶ TOTAL = R$ " + total + 
+      "\n\ ▶ PAGAMENTO " +
+      infoPagamento +
+      "\n\ Pagamento em Dinheiro"
       console.log(mensagem)
   
       let url = "https://api.whatsapp.com/send?phone="+telefone +"&text="+mensagem
