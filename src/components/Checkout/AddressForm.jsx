@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 const AddressForm = ({salvarInformacoes}) => {
     const methods = useForm();
 
-    const [tipoEntrega, setTipoEntrega] = useState([])
     const [nome, setNome] = useState([]);
     const [endereco, setEndereco] = useState([]);
 
@@ -20,9 +19,11 @@ const AddressForm = ({salvarInformacoes}) => {
                         <FormInput required name="nome" label="Name" />               
                         <FormInput required name="endereco" label="Endereço" />                              
                     </Grid>
+                    <br/>
+
                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Button component={Link} variant="outlined" to="/carrinho">Back to Cart</Button>
-                        <Button type="submit" variant="contained" color="primary">Next</Button>
+                        <Button component={Link} variant="outlined" to="/carrinho">Voltar ao carrinho</Button>
+                        <Button type="submit" variant="contained" color="primary">Continuar</Button>
                     </div>
                 </form>
             </FormProvider>

@@ -11,21 +11,69 @@ const steps = ["Endereço", "Detalhes do Pagamento"]
 const Checkout = ({ carrinho }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [endereco, setEndereco] = useState({});
+    const [pagamento, setPagamento] = useState({});
 
     const classes = useStyles();
 
     const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1);
     const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1);
     
+  	const goToWhatsapp = () => {
+      console.log("aaa", endereco, carrinho, Object.keys(carrinho))
+
+      let nome = "joao" || endereco.nome
+      let enderecoo = "rua dali de casa" || endereco.endereco
+      let total = 0
+      let produtos = ""
+      let telefone = "5585986826485"
+      if (carrinho){
+        for (var key in carrinho){
+          let subtotal =  carrinho[key].preco * carrinho[key].quantity
+          total += subtotal
+          produtos += carrinho[key].quantity + "x" + carrinho[key].nome +
+          "Valor unitário (R$ " + carrinho[key].preco +")"+ 
+          "Subtotal do item: R$ " +subtotal 
+        }
+
+      }
+  
+      let mensagem = "✅ NOVO PEDIDO "+
+      "▶ RESUMO DO PEDIDO" + 
+      produtos +
+      " -  -  -  -  -  -  -  -  -  -  - " +
+      "▶ Dados para entrega " +
+  
+      "Nome: "+ nome +
+      "Endereço: " +enderecoo +
+  
+      "▶ TOTAL = R$ " + total + 
+      "▶ PAGAMENTO " +
+      "Pagamento em Dinheiro"
+      console.log(mensagem)
+  
+      let url = "https://api.whatsapp.com/send?phone="+telefone +"&text="+mensagem
+      url = encodeURI(url)
+      console.log(url)
+  
+      window.location.href = url
+  
+    }
+
+    console.log(pagamento, endereco)
+
+
     let Confirmation = () => (true ? (
         <>
           <div>
-            <Typography variant="h5">Thank you for your purchase, {"nome"}!</Typography>
+            <Typography variant="h5">Falta pouco para realizar seu pedido!</Typography>
             <Divider className={classes.divider} />
-            <Typography variant="subtitle2">Order ref: {"id da compra"}</Typography>
+            <Typography variant="subtitle2">Clique no botão para enviar seu pedido</Typography>
+            <br/>    
+              <Button onClick={goToWhatsapp}  variant="contained" color="primary">Enviar pedido</Button>
+            <br/>
           </div>
           <br />
-          <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
+          <Button component={Link} variant="outlined" type="button" to="/">Menu principal</Button>
         </>
       ) : (
         <div className={classes.spinner}>
@@ -33,11 +81,12 @@ const Checkout = ({ carrinho }) => {
         </div>
       ));
       const salvarEndereco = (data) => {
+        
         setEndereco(data);
         nextStep();
       };
       const salvarPagamento = (data) => {
-        setEndereco(data);
+        setPagamento(data);
         nextStep();
       };
 
