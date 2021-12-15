@@ -29,26 +29,26 @@ const Checkout = ({ carrinho }) => {
       let infoPagamento = "Pagamento em cartão"
  
         for (var key in carrinho){
-          let subtotal =  carrinho[key].preco * carrinho[key].quantity
+          let qtd = carrinho[key].quantity
+          let subtotal =  carrinho[key].preco * qtd
           total += subtotal
-          produtos += carrinho[key].quantity + " x " + carrinho[key].nome +
+          produtos += qtd + " x " + carrinho[key].nome +
           "\n\ Valor unitário (R$ " + carrinho[key].preco +")"+ 
-          "\n\ Subtotal do item: R$ " +subtotal 
+          "\n\ Subtotal do item: R$  " +subtotal + " \n\ \n\ " 
         }
 
       
-      let mensagem = "✅ NOVO PEDIDO \n\ "+
-      "▶ RESUMO DO PEDIDO\n\ " + 
-      produtos +"\n\ " +
+      let mensagem = "✅ NOVO PEDIDO \n\ \n\ "+
+      "▶ RESUMO DO PEDIDO\n\ \n\ " + 
+      produtos +"\n\ \n\ " +
       "▶ Dados para entrega\n\  " +
   
       "Nome: "+ nome +
       "\n\ Endereço: " +enderecoo +
   
-      "\n\ ▶ TOTAL = R$ " + total + 
-      "\n\ ▶ PAGAMENTO " +
-      infoPagamento +
-      "\n\ Pagamento em Dinheiro"
+      "\n\ \n\ ▶ TOTAL = R$ " + total + 
+      "\n\ \n\ ▶ PAGAMENTO \n\ " +
+      infoPagamento
       console.log(mensagem)
   
       let url = "https://api.whatsapp.com/send?phone="+telefone +"&text="+mensagem
